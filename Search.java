@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
+
 public class Search {
 
 /*******************************************************************************
@@ -53,6 +54,8 @@ public class Search {
 	private static double TmemberFitness;
 
 	private static double fitnessStats[][];  // 0=Avg, 1=Best
+
+	public static Map<Character,Location> locations;
 
 /*******************************************************************************
 *                              CONSTRUCTORS                                    *
