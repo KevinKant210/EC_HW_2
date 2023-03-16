@@ -28,16 +28,41 @@ public class Chromo
 *                              CONSTRUCTORS                                    *
 *******************************************************************************/
 
+	public int getRandomWithExclusion(Random rnd, int start, int end, ArrayList<Integer> exclude) {
+		int random = start + rnd.nextInt(end - start + 1 - exclude.size());
+		for (int ex : exclude) {
+			if (random < ex) {
+				break;
+			}
+			random++;
+		}
+		return random;
+	}
+
 	public Chromo(){
 		//  Set gene values to a randum sequence of 1's and 0's
 		char geneBit;
 		chromo = "";
+		ArrayList<Integer> used = new ArrayList<>();
 		for (int i=0; i<Parameters.numGenes; i++){
 			for (int j=0; j<Parameters.geneSize; j++){
-				randnum = Search.r.nextDouble();
-				if (randnum > 0.5) geneBit = '0';
-				else geneBit = '1';
-				this.chromo = chromo + geneBit;
+				// randnum = Search.r.nextDouble();
+				// if (randnum > 0.5) geneBit = '0';
+				// else geneBit = '1';
+				// this.chromo = chromo + geneBit;
+				
+				int randnumber = getRandomWithExclusion(Search.r, 0, 47, used);
+
+				int a = 65;
+
+				if(randnumber > 25){
+					a = a + 6;
+					this.chromo += (char)a+randnumber;
+				}else{
+					this.chromo += (char)a+randnumber;
+				}
+
+				used.add(randnumber);
 			}
 		}
 
@@ -115,7 +140,9 @@ public class Chromo
 			}
 			this.chromo = mutChromo;
 			break;
-
+		case 2: //random swap
+			//implement random swap here
+			break;
 		default:
 			System.out.println("ERROR - No mutation method selected");
 		}
@@ -178,6 +205,8 @@ public class Chromo
 		case 2:     //  Two Point Crossover
 
 		case 3:     //  Uniform Crossover
+
+		case 4: //Edge Recombination
 
 		default:
 			System.out.println("ERROR - Bad crossover method selected");
