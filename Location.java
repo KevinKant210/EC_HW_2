@@ -4,10 +4,14 @@ public class Location{
     //when storing these store them in radian values
     public double latitude;
     public double longitude;
+    public String id;
+    public static double R = 3958.8;
 
-    public static double R = 6371000;
-
-    
+    public Location(Double lat, Double longi,String id_in){
+        latitude = lat;
+        longitude = longi;
+        id = id_in;
+    }
 
     public static double distance(Location a, Location b){
         

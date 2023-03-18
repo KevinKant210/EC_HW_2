@@ -28,7 +28,103 @@ public class Chromo
 *                              CONSTRUCTORS                                    *
 *******************************************************************************/
 
-	public int getRandomWithExclusion(Random rnd, int start, int end, ArrayList<Integer> exclude) {
+	public static String edgeRecomb(Chromo parent_1,Chromo parent_2){
+		
+		
+		ArrayList<Integer> values_1 = new ArrayList<>();
+		ArrayList<Integer> values_2 = new ArrayList<>();
+
+		
+		for(int i = 0 ;i < parent_1.chromo.length(); i += 2){
+			
+			values_1.add(Integer.parseInt(parent_1.chromo.substring(i,i+2)));
+			values_2.add(Integer.parseInt(parent_2.chromo.substring(i,i+2)));
+			
+		}
+		
+		int n = values_1.size();
+		Map<Integer,Set<Integer>> edges = new HashMap<>();
+
+		for(int i =0; i < values_1.size(); i++){
+			Set<Integer> set = new HashSet<>();
+
+			int next = (i+1)%n;
+			int prev = (i-1 +n)%n;
+
+			set.add(values_1.get(next));
+			set.add(values_1.get(prev));
+
+			int index = values_2.indexOf(values_1.get(i));
+
+			next = (index + 1)%n;
+			prev = (index-1 + n)%n;
+
+			set.add(values_2.get(next));
+			set.add(values_2.get(prev));
+
+			edges.put(values_1.get(i), set);
+		}
+
+		ArrayList<Integer> child = new ArrayList<>();
+		ArrayList<Integer> added = new ArrayList<>();
+		Integer chosen = Search.r.nextInt(0,48);
+
+		while(child.size() != n){
+			child.add(chosen);
+			if(child.size() == n)break;
+			added.add(chosen);
+			
+			//we sort added here to keep get random with exclusion working
+			added.sort(Comparator.naturalOrder());
+			//get the list of neighbors that the chosen one is connected too
+			ArrayList<Integer> neighbors = new ArrayList<>(edges.get(chosen));
+
+			//from here we need to remove chosen from all its neighbors so we do that
+
+			//we set candidate equal initially to a random value for the case that there are no neighbors of this node
+			int candidate = -1;
+			int min_size = Integer.MAX_VALUE;
+
+			for(int i = 0 ; i < neighbors.size(); i++){
+				edges.get(neighbors.get(i)).remove(chosen);
+				//once removed we can then assess if this neighbor is a valid candidate for adding 
+
+				if(edges.get(neighbors.get(i)).size() < min_size){
+					min_size = edges.get(neighbors.get(i)).size();
+					candidate = neighbors.get(i);
+				}
+			}
+			//we can then choose this value  and set it to a chosen valeu
+
+			if(candidate == -1){
+				chosen = getRandomWithExclusion(Search.r, 0, 47, added);
+			}else{
+				chosen = candidate;
+			}
+
+			
+		}
+
+		String values = "";
+		for(int i = 0 ; i < child.size(); i++){
+			
+			String add = "";
+			if(child.get(i) < 10){
+				add = "0";
+
+			}
+
+			add += Integer.toString(child.get(i));
+
+			values += add;
+		}
+
+		
+		
+		return values;
+	}
+
+	public static int getRandomWithExclusion(Random rnd, int start, int end, ArrayList<Integer> exclude) {
 		int random = start + rnd.nextInt(end - start + 1 - exclude.size());
 		for (int ex : exclude) {
 			if (random < ex) {
@@ -50,22 +146,47 @@ public class Chromo
 				// if (randnum > 0.5) geneBit = '0';
 				// else geneBit = '1';
 				// this.chromo = chromo + geneBit;
+				boolean exit = false;
+
 				
 				int randnumber = getRandomWithExclusion(Search.r, 0, 47, used);
 
-				int a = 65;
-
-				if(randnumber > 25){
-					a = a + 6;
-					this.chromo += (char)a+randnumber;
+				// int a = 65;
+				// int b = a + 6;
+				// if(randnumber > 25){
+					
+				// 	chromo += (char) (b+randnumber);
+				// }else{
+				// 	chromo += (char) (a+randnumber);
+				// }
+				String add = "";
+				if(randnumber < 10){
+					add += ('0' + Integer.toString(randnumber));
 				}else{
-					this.chromo += (char)a+randnumber;
+					add += Integer.toString(randnumber);
 				}
 
+				// for(int val : used){
+				// 	int comp = Integer.parseInt(add);
+
+				// 	if(val == comp){
+				// 		System.out.println("Copy!");
+				// 	}
+				// }
+
 				used.add(randnumber);
+				used.sort(Comparator.naturalOrder());
+
+				
+				chromo += add;
 			}
 		}
-
+		// System.out.println("Start");
+		// System.out.println(chromo);
+		// System.out.println(chromo.length());
+		// System.out.println("End");
+		this.chromo = chromo;
+		
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
 		this.proFitness = -1;   //  Fitness not yet proportionalized
@@ -138,10 +259,47 @@ public class Chromo
 				}
 				mutChromo = mutChromo + x;
 			}
+
+			
+
 			this.chromo = mutChromo;
 			break;
 		case 2: //random swap
 			//implement random swap here
+			ArrayList<Integer> holder = new ArrayList<>();
+			for(int i = 0 ; i < this.chromo.length(); i +=2){
+
+				Integer val = Integer.parseInt(this.chromo.substring(i,i+2));
+				holder.add(val);
+
+				
+			}
+
+			int index_one = Search.r.nextInt(holder.size());
+
+			int index_two = Search.r.nextInt(holder.size());
+
+			while(index_one == index_two){
+				index_two = Search.r.nextInt(holder.size());
+			}
+
+			int temp = holder.get(index_one);
+			holder.set(index_one, holder.get(index_two));
+
+			holder.set(index_two,temp);
+
+			for(int i = 0 ; i < holder.size(); i++){
+				String add = "";
+				if(holder.get(i) < 10){
+					add += '0';
+				}
+
+				add += Integer.toString(holder.get(i));
+
+				mutChromo += add;
+			}
+			
+			this.chromo = mutChromo;
 			break;
 		default:
 			System.out.println("ERROR - No mutation method selected");
@@ -200,14 +358,22 @@ public class Chromo
 			//  Create child chromosome from parental material
 			child1.chromo = parent1.chromo.substring(0,xoverPoint1) + parent2.chromo.substring(xoverPoint1);
 			child2.chromo = parent2.chromo.substring(0,xoverPoint1) + parent1.chromo.substring(xoverPoint1);
+			
 			break;
 
 		case 2:     //  Two Point Crossover
-
+			break;
 		case 3:     //  Uniform Crossover
-
+			
+			break;
 		case 4: //Edge Recombination
+			//edge recombination based on characters in the chromo
+			
+			child1.chromo = edgeRecomb(parent1,parent2);
+			
+			child2.chromo = edgeRecomb(parent2, parent1);
 
+			break;
 		default:
 			System.out.println("ERROR - Bad crossover method selected");
 		}

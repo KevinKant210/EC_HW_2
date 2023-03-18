@@ -7,7 +7,6 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
-
 public class Search {
 
 /*******************************************************************************
@@ -22,6 +21,8 @@ public class Search {
 
 	public static Chromo[] member;
 	public static Chromo[] child;
+
+	public static int [][] avgPerGen;
 
 	public static Chromo bestOfGenChromo;
 	public static int bestOfGenR;
@@ -43,6 +44,13 @@ public class Search {
 	public static double averageRawFitness;
 	public static double stdevRawFitness;
 
+	public static double averageOfBest;
+	public static double averageOfRaw;
+	public static double averageOfstdev;
+	public static double totalOfBest;
+	public static double totalOfRaw;
+	public static double totalOfstdev;
+
 	public static int G;
 	public static int R;
 	public static Random r = new Random();
@@ -54,8 +62,7 @@ public class Search {
 	private static double TmemberFitness;
 
 	private static double fitnessStats[][];  // 0=Avg, 1=Best
-
-	public static Map<Character,Location> locations;
+	public static Map<String,Location> locations = new HashMap<>();
 
 /*******************************************************************************
 *                              CONSTRUCTORS                                    *
@@ -85,6 +92,52 @@ public class Search {
 		FileWriter summaryOutput = new FileWriter(summaryFileName);
 		parmValues.outputParameters(summaryOutput);
 
+		String averageSummary = Parameters.expID + "_Average.csv";
+		FileWriter averageOutput = new FileWriter(averageSummary);
+
+		try{
+			File file = new File("opt.txt");
+
+			Scanner input = new Scanner(file);
+
+			int counter = 0;
+
+			while(input.hasNextLine()){
+				String line = input.nextLine();
+
+				String[] parts = line.split(" ");
+
+				if(parts[0].length() == 1){
+					parts[0] = '0' + parts[0];
+				}
+
+				Location loc = new Location(Double.parseDouble(parts[1]),Double.parseDouble(parts[2]),parts[0]);
+				locations.put(loc.id, loc);
+				// int a = 65;
+				// int b = a + 6;
+
+				// if(counter > 25){
+				// 	locations.put((char) (b+counter),loc);
+					
+					
+				// }else{
+				// 	locations.put((char) (a+counter),loc);
+					
+				// }
+
+				
+				// counter++;
+
+				
+			}
+
+			input.close();
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			
+		}
+
+
 	//	Set up Fitness Statistics matrix
 		fitnessStats = new double[2][Parameters.generations];
 		for (int i=0; i<Parameters.generations; i++){
@@ -101,6 +154,9 @@ public class Search {
 		}
 		else if (Parameters.problemType.equals("OM")){
 				problem = new OneMax();
+		}
+		else if (Parameters.problemType.equals("TS")){
+			problem = new TravelingSalesman();
 		}
 		else System.out.println("Invalid Problem Type");
 
@@ -211,7 +267,10 @@ public class Search {
 
 				// Output generation statistics to screen
 				System.out.println(R + "\t" + G +  "\t" + (int)bestOfGenChromo.rawFitness + "\t" + averageRawFitness + "\t" + stdevRawFitness);
-
+				totalOfRaw += averageRawFitness;
+				totalOfBest += (int)bestOfGenChromo.rawFitness;
+				totalOfstdev += stdevRawFitness;
+				
 				// Output generation statistics to summary file
 				summaryOutput.write(" R ");
 				Hwrite.right(R, 3, summaryOutput);
@@ -358,7 +417,19 @@ public class Search {
 
 			problem.doPrintGenes(bestOfRunChromo, summaryOutput);
 
-			System.out.println(R + "\t" + "B" + "\t"+ (int)bestOfRunChromo.rawFitness);
+			System.out.println(R + "\t" + "B" + "\t "+ (int)bestOfRunChromo.rawFitness);
+			averageOfBest = totalOfBest/200;
+			averageOfRaw = totalOfRaw/200;
+			averageOfstdev = totalOfstdev/200;
+			System.out.println("Average of Best: " + averageOfBest + " Average of Raw: " + averageOfRaw + " Average of Stdev: " + averageOfstdev);
+			//averageOutput.write((int)bestOfRunChromo.rawFitness + "," + averageOfBest + "," + averageOfRaw + "," + averageOfstdev);
+			averageOfBest = 0;
+			averageOfRaw = 0;
+			averageOfstdev = 0;
+			totalOfBest  = 0;
+			totalOfRaw = 0;
+			totalOfstdev = 0;
+			averageOutput.write("\n");
 
 		} //End of a Run
 
@@ -377,7 +448,7 @@ public class Search {
 
 		summaryOutput.write("\n");
 		summaryOutput.close();
-
+		averageOutput.close();
 		System.out.println();
 		System.out.println("Start:  " + startTime);
 		dateAndTime = Calendar.getInstance(); 
@@ -387,4 +458,5 @@ public class Search {
 	} // End of Main Class
 
 }   // End of Search.Java ******************************************************
+
 
