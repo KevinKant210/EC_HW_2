@@ -1,18 +1,18 @@
 Experiment ID                :travelingsalesman
 Problem Type                 :TS
 Data Input File Name         :NA
-Number of Runs               :10
-Generations per Run          :200
-Population Size              :100
-Selection Method (1)         :1
+Number of Runs               :50
+Generations per Run          :100
+Population Size              :500
+Selection Method (1)         :2
 Fitness Scaling Type (2)     :1
 Crossover Type (3)           :4
 Crossover Rate (4)           :0.8
 Mutation Type (5)            :2
-Mutation Rate (6)            :0.005
+Mutation Rate (6)            :0.1
 Random Number Seed           :75982
 Number of Genes/Points (7)   :1
-Size of Genes (18)           :47
+Size of Genes (18)           :48
 
 Notes:
 
@@ -28,10 +28,11 @@ Notes:
 3)  Crossover Type Codes    1 = Single Point Crossover
 							2 = Two Point Crossover
 							3 = Uniform Crossover
+							4 = edge recombination;
 
 4)  Crossover Rates from 0 to 1, Use "0" to turn off crossover
 
-5)  Mutation Type Codes     1 = Flip Bit
+5)  Mutation Type Codes     1 = Flip Bit 2 = random swap
 
 6)  Mutation Rates from 0 to 1, Use "0" to turn off mutation
 

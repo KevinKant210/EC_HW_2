@@ -334,6 +334,26 @@ public class Chromo
 			return(j);
 
 		case 2:     //  Tournament Selection
+			//k tournament size
+			int k_tourn = 50;
+
+			ArrayList<Integer> tourn_pop = new ArrayList<>();
+			
+			for(int i = 0 ; i < k_tourn; i++){
+				tourn_pop.add(Search.r.nextInt(Parameters.popSize));
+				
+			}
+
+			int best = tourn_pop.get(0);
+
+			
+
+			for(int i =1 ; i < k_tourn; i++){
+
+				if(Search.member[tourn_pop.get(i)].rawFitness < Search.member[best].rawFitness)best = tourn_pop.get(i);
+			}
+
+			return best;
 
 		default:
 			System.out.println("ERROR - No selection method selected");

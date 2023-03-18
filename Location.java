@@ -8,8 +8,8 @@ public class Location{
     public static double R = 3958.8;
 
     public Location(Double lat, Double longi,String id_in){
-        latitude = lat;
-        longitude = longi;
+        latitude = Math.toRadians(lat);
+        longitude = Math.toRadians(longi);
         id = id_in;
     }
 
@@ -20,7 +20,9 @@ public class Location{
 
         double equation_a = Math.pow(Math.sin(deltaLat/2),2) + Math.cos(a.latitude)*Math.cos(b.latitude)*Math.pow(Math.sin(deltaLong/2),2);
 
-        double equation_c = 2 * Math.atan2(Math.sqrt(equation_a),Math.sqrt(1-equation_a));
+        // double equation_c = 2 * Math.atan2(Math.sqrt(equation_a),Math.sqrt(1-equation_a));
+
+         double equation_c = 2 * Math.asin(Math.sqrt(equation_a));
 
         return Location.R * equation_c;
     }

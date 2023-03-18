@@ -1,0 +1,40 @@
+Experiment ID                :  travelingsalesman
+Problem Type                 :  TS
+Data Input File Name         :  NA
+Number of Runs               :  1
+Generations per Run          :  10
+Population Size              :  10
+Selection Method             :  1
+Fitness Scaling Type         :  1
+Min or Max Fitness           :  min
+Crossover Type               :  4
+Crossover Rate               :  0.8
+Mutation Type                :  2
+Mutation Rate                :  0.005
+Random Number Seed           :  75982
+Number of Genes/Points       :  1
+Size of Genes                :  48
+
+
+ R   1 G   0 119428 144766.911  24237.423
+ R   1 G   1 120518 141989.414  18030.501
+ R   1 G   2 106854 129485.287  15181.183
+ R   1 G   3 102331 136831.079  17620.625
+ R   1 G   4 113101 134212.756  17249.936
+ R   1 G   5 112887 134836.582  13364.986
+ R   1 G   6 100719 123530.921   13983.55
+ R   1 G   7 113700 127609.332  14035.283
+ R   1 G   8 107047 133966.685  15080.781
+ R   1 G   9  95056 132372.665   19588.49
+1      9B       Gen                 AvgFit              BestFit 
+0              144766.91           119428.96           
+1              141989.41           120518.73           
+2              129485.29           106854.18           
+3              136831.08           102331.86           
+4              134212.76           113101.66           
+5              134836.58           112887.48           
+6              123530.92           100719.55           
+7              127609.33           113700.76           
+8              133966.69           107047.44           
+9              132372.67           95056.98            
+
